@@ -81,6 +81,13 @@
     background:transparent;color:var(--ink);border:1.5px solid var(--line);
   }
   .btn-ghost:hover{border-color:var(--purple);color:var(--purple);}
+  .hamburger{
+    display:none; /* Hidden on desktop */
+    background:transparent;
+    border:none;
+    color:var(--ink);
+    cursor:pointer;
+  }
   .btn-dark{background:var(--dark);color:#fff;}
   .btn-dark:hover{transform:translateY(-2px);}
   .btn-sm{padding:9px 18px;font-size:13px;}
@@ -355,7 +362,34 @@
   .socials a:hover svg path{stroke:var(--dark);}
 
   @media(max-width:980px){
-    .nav-links{display:none;}
+    .hamburger{display:block;}
+    .nav-links{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:var(--bg);
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      gap:24px;
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transition: opacity .4s ease, visibility .4s ease;
+    }
+    nav.mobile-open .nav-links{
+      opacity:1;
+      visibility:visible;
+      pointer-events:auto;
+    }
+    .nav-links a{font-size:20px;color:var(--ink);}
+    .nav-cta .btn{display:none;} /* Hide desktop CTAs */
+    nav.mobile-open .hamburger{position:fixed;top:18px;right:20px;z-index:101;}
+    nav.mobile-open .hamburger svg{display:none;}
+    nav.mobile-open .hamburger::before{content:'✕';font-size:24px;color:var(--ink);}
+
     .hero-grid{grid-template-columns:1fr;}
     .hero-visual{height:400px;margin-top:20px;}
     .about-grid{grid-template-columns:1fr;}
