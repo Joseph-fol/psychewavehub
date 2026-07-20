@@ -732,7 +732,17 @@
   });
 
   hamburgerBtn.addEventListener('click', () => {
+    // Check if we are opening the menu
+    const isOpening = !nav.classList.contains('mobile-open');
     nav.classList.toggle('mobile-open');
+
+    // If the menu is opening, force the scrolled class to be on
+    if (isOpening) {
+      nav.classList.add('scrolled');
+    } else if (window.scrollY <= 20) {
+      // If closing and at the top, remove the scrolled class
+      nav.classList.remove('scrolled');
+    }
   });
 
   navLinks.addEventListener('click', (e) => {
@@ -741,6 +751,10 @@
       // ...wait 500ms before closing the menu to allow scroll animation
       setTimeout(() => {
         nav.classList.remove('mobile-open');
+        // After closing, if we are at the top, remove the background
+        if (window.scrollY <= 20) {
+          nav.classList.remove('scrolled');
+        }
       }, 500);
     }
   });
