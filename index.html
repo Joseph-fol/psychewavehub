@@ -62,7 +62,6 @@
   @keyframes spin{to{transform:rotate(360deg);}}
   .nav-links{display:flex;gap:36px;align-items:center;}
   .nav-links a{font-size:14.5px;font-weight:600;color:var(--muted);transition:color .25s;position:relative;}
-  .nav-mobile-cta { display: none; } /* Hide mobile buttons on desktop */
   .nav-links a:hover{color:var(--ink);}
   .nav-cta{display:flex;gap:12px;align-items:center;}
   .btn{
@@ -93,6 +92,28 @@
   .btn-dark{background:var(--dark);color:#fff;}
   .btn-dark:hover{transform:translateY(-2px);}
   .btn-sm{padding:9px 18px;font-size:13px;}
+
+  /* --- Mobile Navigation Overlay --- */
+  .mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99; /* Below the main nav bar, but above page content */
+    background: rgba(250, 248, 255, 0.72);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
 
   /* ---------- Hero ---------- */
   header.hero{
@@ -364,37 +385,27 @@
   .socials a:hover svg path{stroke:var(--dark);}
 
   @media(max-width:980px){
+    .nav-links { display: none; } /* Hide desktop links on mobile */
+    .nav-cta .btn { display: none; } /* Hide desktop CTAs on mobile */
     .nav-cta .hamburger{display:block;}
     .hamburger{display:block;}
-    .nav-links{
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background:rgba(250,248,255,0.72);
-      backdrop-filter:blur(18px) saturate(160%);
-      -webkit-backdrop-filter:blur(18px) saturate(160%);
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      gap:24px;
-      opacity:0;
-      visibility:hidden;
-      pointer-events:none;
-      transition: opacity .4s ease, visibility .4s ease, backdrop-filter .4s ease;
+
+    /* When mobile menu is open */
+    body.mobile-menu-open .mobile-nav-overlay {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
     }
-    nav.mobile-open .nav-links{
-      opacity:1;
-      visibility:visible;
-      pointer-events:auto;
+    body.mobile-menu-open .hamburger {
+      position: fixed; /* Keep it fixed over the overlay */
+      top: 18px;
+      right: 20px;
+      z-index: 101;
     }
-    .nav-links a{font-size:20px;color:var(--ink);}
-    .nav-cta .btn{display:none;} /* Hide desktop CTAs */
-    nav.mobile-open .hamburger{position:fixed;top:18px;right:20px;z-index:101;}
-    nav.mobile-open .hamburger svg{display:none;}
-    nav.mobile-open .hamburger::before{content:'✕';font-size:24px;color:var(--ink);}
-    .nav-mobile-cta{ display: flex; flex-direction: column; gap: 14px; margin-top: 20px; width: 100%; padding: 0 20px; }
+    body.mobile-menu-open .hamburger svg { display: none; }
+    body.mobile-menu-open .hamburger::before { content: '✕'; font-size: 24px; color: var(--ink); }
+    .mobile-nav-overlay a { font-size: 20px; font-weight: 700; color: var(--ink); }
+    .mobile-nav-cta { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; width: 100%; padding: 0 20px; }
 
     .hero-grid{grid-template-columns:1fr;}
     .hero-visual{height:400px;margin-top:20px;}
@@ -422,17 +433,12 @@
 <nav id="nav">
   <div class="wrap nav-inner">
     <div class="logo"><span class="logo-mark"></span>Psychewave</div>
-    <div class="nav-links" id="nav-links">
+    <div class="nav-links">
       <a href="#home">Home</a>
       <a href="#about">About</a>
       <a href="#services">Services</a>
       <a href="#store">Store</a>
-      <!-- <a href="#faq">FAQ</a> -->
       <a href="#contact">Contact</a>
-      <div class="nav-mobile-cta">
-        <a href="#" class="btn btn-ghost btn-sm">Track Shipment</a>
-        <a href="#" class="btn btn-primary btn-sm">Schedule Pickup</a>
-      </div>
     </div>
     <div class="nav-cta">
       <a href="#" class="btn btn-ghost btn-sm">Track Shipment</a>
@@ -442,13 +448,24 @@
   </div>
 </nav>
 
+<div class="mobile-nav-overlay" id="mobile-nav-overlay">
+  <a href="#home">Home</a>
+  <a href="#about">About</a>
+  <a href="#services">Services</a>
+  <a href="#store">Store</a>
+  <a href="#contact">Contact</a>
+  <div class="mobile-nav-cta">
+    <a href="#" class="btn btn-ghost btn-sm">Track Shipment</a>
+    <a href="#" class="btn btn-primary btn-sm">Schedule Pickup</a>
+  </div>
+</div>
+
 <header class="hero" id="home">
   <div class="blob blob1"></div>
   <div class="blob blob2"></div>
   <div class="blob blob3"></div>
   <div class="wrap hero-grid">
     <div>
-      <!-- <div class="eyebrow"><span class="dot"></span> Now verifying deliveries by QR across 36 states</div> -->
       <h1 class="display">Delivering more than packages. <span class="grad">Delivering confidence.</span></h1>
       <p class="hero-sub">Schedule pickups, track shipments in real time, verify deliveries with QR technology, and shop premium logistics supplies — all from one platform built for speed.</p>
       <div class="hero-actions">
@@ -457,16 +474,16 @@
         <!-- <a href="#" class="btn-play"><span class="circle">▶</span> Watch demo</a> -->
       </div>
       <div class="stat-row">
-        <div class="stat-item"><div class="num">20,000+</div><div class="label">Deliveries completed</div></div>
+        <div class="stat-item"><div class="num">2,000+</div><div class="label">Deliveries completed</div></div>
         <div class="stat-item"><div class="num">99.8%</div><div class="label">Delivery success</div></div>
-        <div class="stat-item"><div class="num">36 states</div><div class="label">Nationwide coverage</div></div>
+        <!-- <div class="stat-item"><div class="num">36 states</div><div class="label">Nationwide coverage</div></div> -->
       </div>
     </div>
 
     <div class="hero-visual">
       <div class="card-main">
         <div class="route-label">Live shipment</div>
-        <div class="route"><span class="city">Lagos</span><div class="route-line"></div><span class="city">Abuja</span></div>
+        <div class="route"><span class="city">Ogbomoso</span><div class="route-line"></div><span class="city">Ibadan</span></div>
         <div class="qr-box">
           <div class="qr-grid">
             <div class="scanline"></div>
@@ -513,9 +530,9 @@
       </div>
     </div>
     <div class="about-panel reveal">
-      <div class="stat-card grad"><div class="n">15,000+</div><div class="l">Active customers</div></div>
+      <div class="stat-card grad"><div class="n">1,500+</div><div class="l">Active customers</div></div>
       <div class="stat-card"><div class="n">99.8%</div><div class="l">Successful deliveries</div></div>
-      <div class="stat-card"><div class="n">36</div><div class="l">States covered</div></div>
+      <div class="stat-card"><div class="n">2</div><div class="l">Cities covered</div></div>
       <div class="stat-card"><div class="n">24/7</div><div class="l">Support coverage</div></div>
     </div>
   </div>
@@ -537,8 +554,8 @@
       </div>
       <div class="service-card reveal">
         <div class="icon-badge" style="background:var(--blue);">🚚</div>
-        <h3>Nationwide Delivery</h3>
-        <p>Ship anywhere across 36 states with predictable transit windows.</p>
+        <h3>Delivery to cities</h3>
+        <p>Ship anywhere across Ogbomoso and Ibadan and within with predictable transit windows.</p>
         <a class="card-link" href="#">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>
       </div>
       <div class="service-card reveal">
@@ -650,7 +667,7 @@
       <div class="why-card"><div class="icon-badge" style="background:var(--purple);">⚡</div><h4>Technology First</h4><p>A connected platform instead of disjointed hand-offs.</p></div>
       <div class="why-card"><div class="icon-badge" style="background:var(--blue);">🚀</div><h4>Fast Delivery</h4><p>Optimized routing keeps transit times predictable.</p></div>
       <div class="why-card"><div class="icon-badge" style="background:var(--purple);">🔐</div><h4>Secure QR Verification</h4><p>Every handoff confirmed, every time, no exceptions.</p></div>
-      <div class="why-card"><div class="icon-badge" style="background:var(--accent);">🗺️</div><h4>Nationwide Coverage</h4><p>36 states and growing, one network throughout.</p></div>
+      <div class="why-card"><div class="icon-badge" style="background:var(--accent);">🗺️</div><h4>Cities Coverage</h4><p>Ogbomoso and Ibadan and growing, one network throughout other states</p></div>
       <div class="why-card"><div class="icon-badge" style="background:var(--blue);">💳</div><h4>Affordable Pricing</h4><p>Transparent rates with no hidden pickup fees.</p></div>
       <div class="why-card"><div class="icon-badge" style="background:var(--accent);">💬</div><h4>24/7 Support</h4><p>Real people, always reachable, always responsive.</p></div>
     </div>
@@ -660,10 +677,10 @@
 <section style="background:#F3F1FC;">
   <div class="wrap">
     <div class="stats-band reveal">
-      <div class="band-stat"><div class="n">20,000+</div><div class="l">Deliveries</div></div>
-      <div class="band-stat"><div class="n">15,000+</div><div class="l">Customers</div></div>
+      <div class="band-stat"><div class="n">2,000+</div><div class="l">Deliveries</div></div>
+      <div class="band-stat"><div class="n">1,500+</div><div class="l">Customers</div></div>
       <div class="band-stat"><div class="n">99.8%</div><div class="l">Successful deliveries</div></div>
-      <div class="band-stat"><div class="n">36</div><div class="l">States covered</div></div>
+      <div class="band-stat"><div class="n">2</div><div class="l">Cities covered</div></div>
     </div>
   </div>
 </section>
@@ -719,33 +736,36 @@
 <script>
   const nav = document.getElementById('nav');
   const hamburgerBtn = document.getElementById('hamburger-btn');
-  const navLinks = document.getElementById('nav-links');
+  const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
 
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 20);
+    // Only manage scroll class if the mobile menu is not open
+    if (!document.body.classList.contains('mobile-menu-open')) {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    }
   });
 
   hamburgerBtn.addEventListener('click', () => {
-    // Check if we are opening the menu
-    const isOpening = !nav.classList.contains('mobile-open');
-    nav.classList.toggle('mobile-open');
+    const isOpening = !document.body.classList.contains('mobile-menu-open');
+    document.body.classList.toggle('mobile-menu-open');
 
-    // If the menu is opening, force the scrolled class to be on
+    // When opening the menu, always apply the scrolled background to the nav bar
     if (isOpening) {
       nav.classList.add('scrolled');
-    } else if (window.scrollY <= 20) {
-      // If closing and at the top, remove the scrolled class
+    } 
+    // When closing, if we are at the top of the page, remove the background
+    else if (window.scrollY <= 20) {
       nav.classList.remove('scrolled');
     }
   });
 
-  navLinks.addEventListener('click', (e) => {
-    // If a link inside the mobile menu is clicked...
+  mobileNavOverlay.addEventListener('click', (e) => {
+    // If a link inside the overlay is clicked
     if (e.target.tagName === 'A') {
-      // ...wait 500ms before closing the menu to allow scroll animation
+      // Wait for the smooth scroll to be visible, then close the menu
       setTimeout(() => {
-        nav.classList.remove('mobile-open');
-        // After closing, if we are at the top, remove the background
+        document.body.classList.remove('mobile-menu-open');
+        // After closing, check if we're at the top and remove the nav background if so
         if (window.scrollY <= 20) {
           nav.classList.remove('scrolled');
         }
