@@ -736,9 +736,12 @@
   });
 
   navLinks.addEventListener('click', (e) => {
-    // Close menu when a link is clicked
+    // If a link inside the mobile menu is clicked...
     if (e.target.tagName === 'A') {
-      nav.classList.remove('mobile-open');
+      // ...wait 500ms before closing the menu to allow scroll animation
+      setTimeout(() => {
+        nav.classList.remove('mobile-open');
+      }, 500);
     }
   });
 
