@@ -50,7 +50,7 @@
   }
   .nav-inner{display:flex;align-items:center;justify-content:space-between;}
   .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-0.02em;}
-  .logo-mark{
+  /* .logo-mark{
     width:30px;height:30px;border-radius:9px;
     background:var(--purple);
     position:relative;
@@ -58,7 +58,7 @@
   }
   .logo-mark::after{
     content:'';position:absolute;inset:3px;background:var(--bg);border-radius:6px;
-  }
+  } */
   @keyframes spin{to{transform:rotate(360deg);}}
   .nav-links{display:flex;gap:36px;align-items:center;}
   .nav-links a{font-size:14.5px;font-weight:600;color:var(--muted);transition:color .25s;position:relative;}
@@ -426,17 +426,22 @@
 <nav id="nav">
   <div class="wrap nav-inner">
     <div class="logo"><span class="logo-mark"></span>Psychewave</div>
-    <div class="nav-links">
+    <div class="nav-links" id="nav-links">
       <a href="#home">Home</a>
       <a href="#about">About</a>
       <a href="#services">Services</a>
       <a href="#store">Store</a>
       <!-- <a href="#faq">FAQ</a> -->
       <a href="#contact">Contact</a>
+      <div class="nav-mobile-cta">
+        <a href="#" class="btn btn-ghost btn-sm">Track Shipment</a>
+        <a href="#" class="btn btn-primary btn-sm">Schedule Pickup</a>
+      </div>
     </div>
     <div class="nav-cta">
       <a href="#" class="btn btn-ghost btn-sm">Track Shipment</a>
       <a href="#" class="btn btn-primary btn-sm">Schedule Pickup</a>
+      <button class="hamburger" id="hamburger-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
 </nav>
@@ -447,7 +452,7 @@
   <div class="blob blob3"></div>
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow"><span class="dot"></span> Now verifying deliveries by QR across 36 states</div>
+      <!-- <div class="eyebrow"><span class="dot"></span> Now verifying deliveries by QR across 36 states</div> -->
       <h1 class="display">Delivering more than packages. <span class="grad">Delivering confidence.</span></h1>
       <p class="hero-sub">Schedule pickups, track shipments in real time, verify deliveries with QR technology, and shop premium logistics supplies — all from one platform built for speed.</p>
       <div class="hero-actions">
@@ -603,7 +608,7 @@
     <div class="product-grid">
       <div class="product-card reveal">
         <div class="product-thumb" style="background:#E7E2FF;"><span class="badge">Bestseller</span><span style="font-size:42px;">👜</span></div>
-        <div class="product-info"><h4>Courier Bag — Large</h4><div class="desc">Water-resistant, reinforced seams</div><div class="row"><span class="price">₦4,500</span><button class="add-btn">+</button></div></div>
+        <div class="product-info"><h4>Tote Bag — Large</h4><div class="desc">Water-resistant, reinforced seams</div><div class="row"><span class="price">₦4,500</span><button class="add-btn">+</button></div></div>
       </div>
       <div class="product-card reveal">
         <div class="product-thumb" style="background:#D6EEFF;"><span class="badge">New</span><span style="font-size:42px;">📦</span></div>
@@ -616,6 +621,24 @@
       <div class="product-card reveal">
         <div class="product-thumb" style="background:#FFE8DA;"><span style="font-size:42px;">🎀</span></div>
         <div class="product-info"><h4>Packing Tape — 3 Pack</h4><div class="desc">Strong hold, no residue</div><div class="row"><span class="price">₦2,300</span><button class="add-btn">+</button></div></div>
+      </div>
+
+      <!-- Row Two -->
+      <div class="product-card reveal">
+        <div class="product-thumb" style="background:#E7E2FF;"><span class="badge">Bestseller</span><span style="font-size:42px;">👜</span></div>
+        <div class="product-info"><h4>Traveling Bag — Large</h4><div class="desc">Water-resistant, reinforced seams</div><div class="row"><span class="price">₦4,500</span><button class="add-btn">+</button></div></div>
+      </div>
+      <div class="product-card reveal">
+        <div class="product-thumb" style="background:#D6EEFF;"><span class="badge">New</span><span style="font-size:42px;">📦</span></div>
+        <div class="product-info"><h4>Wears (5)</h4><div class="desc">Corrugated, multiple sizes</div><div class="row"><span class="price">₦6,200</span><button class="add-btn">+</button></div></div>
+      </div>
+      <div class="product-card reveal">
+        <div class="product-thumb" style="background:#DAFCE9;"><span style="font-size:42px;">🎗️</span></div>
+        <div class="product-info"><h4>Phone Pouch (50)</h4><div class="desc">Bright, high-visibility print</div><div class="row"><span class="price">₦1,800</span><button class="add-btn">+</button></div></div>
+      </div>
+      <div class="product-card reveal">
+        <div class="product-thumb" style="background:#FFE8DA;"><span style="font-size:42px;">🎀</span></div>
+        <div class="product-info"><h4>Delivery Box — 3 Pack</h4><div class="desc">Strong hold, no residue</div><div class="row"><span class="price">₦2,300</span><button class="add-btn">+</button></div></div>
       </div>
     </div>
   </div>
@@ -699,8 +722,22 @@
 
 <script>
   const nav = document.getElementById('nav');
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const navLinks = document.getElementById('nav-links');
+
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  hamburgerBtn.addEventListener('click', () => {
+    nav.classList.toggle('mobile-open');
+  });
+
+  navLinks.addEventListener('click', (e) => {
+    // Close menu when a link is clicked
+    if (e.target.tagName === 'A') {
+      nav.classList.remove('mobile-open');
+    }
   });
 
   const revealEls = document.querySelectorAll('.reveal');
